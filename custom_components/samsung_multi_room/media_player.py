@@ -12,11 +12,11 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 _LOGGER = logging.getLogger(__name__)
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 
 DOMAIN = "samsung_multi_room"
 
-MIN_TIME_BETWEEN_SCANS = timedelta(seconds=10)
+MIN_TIME_BETWEEN_SCANS = timedelta(seconds=3)
 MIN_TIME_BETWEEN_FORCED_SCANS = timedelta(seconds=3)
 
 from homeassistant.helpers import config_validation as cv
@@ -39,19 +39,16 @@ from homeassistant.const import (
   CONF_NAME,
   CONF_HOST,
   STATE_IDLE,
-  STATE_PLAYING,
+  STATE_ON,
   STATE_OFF
 )
 
 MULTI_ROOM_SOURCE_TYPE = [
+  'hdmi1',
+  'hdmi2',
   'optical',
-  'soundshare',
-  'hdmi',
-  'wifi',
-  'aux',
   'bt',
-  'wifi - TuneIn'
-  #wifi - submode: dlna, cp
+  'wifi'
 ]
 
 DEFAULT_NAME = 'Samsung Soundbar'
@@ -291,7 +288,7 @@ class MultiRoomDevice(MediaPlayerDevice):
       _LOGGER.debug(state)
       if state and int(state) == 1:
         "If Power is ON, update other values"
-        self._state = STATE_PLAYING
+        self._state = STATE_ON
         "Get Current Source"
         source = await self.api.get_source()
         "Source 0 is type on input"
